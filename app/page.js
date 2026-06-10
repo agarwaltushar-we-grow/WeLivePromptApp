@@ -4,55 +4,107 @@ import { useMemo, useState } from 'react';
 
 const examples = [
   {
-    title: 'Marketing email',
-    jp: 'マーケメール',
-    category: 'Copy',
+    title: { en: 'Marketing email', ja: 'マーケティングメール' },
+    category: { en: 'Copy', ja: '文章作成' },
     emoji: '✉️',
-    text: 'Write a launch email for a new AI feature. Make it clear, friendly, benefit-led, and suitable for busy business users.'
+    text: {
+      en: 'Write a launch email for a new AI feature. Make it clear, friendly, benefit-led, and suitable for busy business users.',
+      ja: '新しいAI機能のローンチメールを書いてください。忙しいビジネスユーザー向けに、わかりやすく、親しみやすく、メリットが伝わる内容にしてください。'
+    }
   },
   {
-    title: 'Code review',
-    jp: 'コードレビュー',
-    category: 'Dev',
+    title: { en: 'Code review', ja: 'コードレビュー' },
+    category: { en: 'Dev', ja: '開発' },
     emoji: '💻',
-    text: 'Review my Python function and suggest improvements for readability, edge cases, performance, and maintainability.'
+    text: {
+      en: 'Review my Python function and suggest improvements for readability, edge cases, performance, and maintainability.',
+      ja: 'このPython関数をレビューし、読みやすさ、エッジケース、性能、保守性の観点で改善案を出してください。'
+    }
   },
   {
-    title: 'Blog outline',
-    jp: 'ブログ構成',
-    category: 'Content',
+    title: { en: 'Blog outline', ja: 'ブログ構成' },
+    category: { en: 'Content', ja: 'コンテンツ' },
     emoji: '📝',
-    text: 'Create a blog outline about remote work productivity for team managers. Include headline options, sections, key arguments, and examples.'
+    text: {
+      en: 'Create a blog outline about remote work productivity for team managers. Include headline options, sections, key arguments, and examples.',
+      ja: 'チームマネージャー向けに、リモートワークの生産性に関するブログ構成を作ってください。見出し案、章立て、主張、具体例を含めてください。'
+    }
   },
   {
-    title: 'Business proposal',
-    jp: '事業提案',
-    category: 'Strategy',
+    title: { en: 'Business proposal', ja: '事業提案' },
+    category: { en: 'Strategy', ja: '戦略' },
     emoji: '📊',
-    text: 'Create a persuasive business proposal for a new AI service targeting mid-sized companies. Include problem, solution, benefits, pricing logic, implementation plan, and CTA.'
+    text: {
+      en: 'Create a persuasive business proposal for a new AI service targeting mid-sized companies. Include problem, solution, benefits, pricing logic, implementation plan, and CTA.',
+      ja: '中堅企業向けの新しいAIサービスについて、説得力のある事業提案を作ってください。課題、解決策、メリット、価格設計、導入計画、CTAを含めてください。'
+    }
   }
 ];
 
-const flowSteps = [
-  ['01', 'Rough prompt', 'ラフな入力', 'Drop your raw idea, however messy.'],
-  ['02', 'Gap analysis', 'ギャップ分析', 'We spot missing audience, format, intent, and quality criteria.'],
-  ['03', 'Clarify', '確認', 'A few focused questions appear only when the prompt needs them.'],
-  ['04', 'Polished!', '完成！', 'A structured, AI-ready prompt comes back editable and copy-ready.']
-];
+const flowStepsByLanguage = {
+  en: [
+    ['01', 'Rough prompt', 'Draft input', 'Drop your raw idea, however messy.'],
+    ['02', 'Gap analysis', 'Missing details', 'We spot missing audience, format, intent, and quality criteria.'],
+    ['03', 'Clarify', 'Focused questions', 'A few focused questions appear only when the prompt needs them.'],
+    ['04', 'Polished!', 'Ready to use', 'A structured, AI-ready prompt comes back editable and copy-ready.']
+  ],
+  ja: [
+    ['01', 'ラフな入力', 'まずは下書き', 'まとまっていないアイデアでも、そのまま入力できます。'],
+    ['02', '不足情報の分析', 'ギャップ確認', '対象者、形式、目的、品質基準など足りない要素を確認します。'],
+    ['03', '確認質問', '必要な時だけ', 'プロンプトに不足がある場合だけ、短い質問を表示します。'],
+    ['04', '完成！', 'すぐ使える形に', '編集・コピーできるAI向けの構造化プロンプトを返します。']
+  ]
+};
 
-const qualityMetrics = [
-  ['SF', 'Style Fidelity', 'Keeps your vibe', '≥ 80', '%'],
-  ['DMR', 'Detail Match', 'Catches the context', '≥ 70–80', '%'],
-  ['BC', 'Boundary Compliance', 'Stays on task', '≥ 98', '%']
-];
+const qualityMetricsByLanguage = {
+  en: [
+    ['SF', 'Style Fidelity', 'Keeps your vibe', '≥ 80', '%'],
+    ['DMR', 'Detail Match', 'Catches the context', '≥ 70–80', '%'],
+    ['BC', 'Boundary Compliance', 'Stays on task', '≥ 98', '%']
+  ],
+  ja: [
+    ['SF', 'スタイル再現性', '雰囲気を保つ', '≥ 80', '%'],
+    ['DMR', '詳細一致率', '文脈を拾う', '≥ 70–80', '%'],
+    ['BC', '条件遵守率', '依頼から外れない', '≥ 98', '%']
+  ]
+};
 
-const qualityCards = [
-  ['01', 'Objective clarity', 'Does the AI know exactly what success looks like?'],
-  ['02', 'Context fit', 'Does the AI understand the audience, situation, and background?'],
-  ['03', 'Requirements', 'Are constraints, must-haves, and boundaries clear?'],
-  ['04', 'Output format', 'Is the final answer structure specified?'],
-  ['05', 'Quality bar', 'Does the prompt define what good means?']
-];
+const qualityCardsByLanguage = {
+  en: [
+    ['01', 'Objective clarity', 'Does the AI know exactly what success looks like?'],
+    ['02', 'Context fit', 'Does the AI understand the audience, situation, and background?'],
+    ['03', 'Requirements', 'Are constraints, must-haves, and boundaries clear?'],
+    ['04', 'Output format', 'Is the final answer structure specified?'],
+    ['05', 'Quality bar', 'Does the prompt define what good means?']
+  ],
+  ja: [
+    ['01', '目的の明確さ', 'AIが「成功状態」を正しく理解できるか。'],
+    ['02', '文脈の適合', '対象者、状況、背景が十分に伝わっているか。'],
+    ['03', '条件・要件', '必須条件、制約、避けるべきことが明確か。'],
+    ['04', '出力形式', '最終回答の構成や形式が指定されているか。'],
+    ['05', '品質基準', '何をもって「良い」とするかが定義されているか。']
+  ]
+};
+
+
+
+const clarificationCategoryLabelsJa = {
+  Objective: '目的',
+  'Context & Audience': '文脈・対象者',
+  Requirements: '要件',
+  'Output Format': '出力形式',
+  'Quality Bar': '品質基準',
+  Context: '文脈',
+  Audience: '対象者',
+  Constraints: '制約',
+  Format: '形式',
+  Quality: '品質'
+};
+
+function localizeClarificationCategory(category, language) {
+  if (language !== 'ja') return category;
+  return clarificationCategoryLabelsJa[category] || category;
+}
 
 const labels = {
   en: {
@@ -64,16 +116,27 @@ const labels = {
     navAboutJp: '会社情報',
     navMore: 'more',
     navMoreJp: 'その他',
+    footerService: 'service',
+    footerAbout: 'about us',
+    footerMore: 'more',
+    footerInquiry: 'inquiry',
     headerCta: "Let’s go!",
     heroBadge: 'WeLive Prompt Studio',
-    heroBadgeJp: 'プロンプト道場',
-    title: 'Turn messy ideas into prompts that pop.',
+    heroBadgeJp: 'AI Prompt Polisher',
+    titleLead: 'Turn messy ideas into',
+    titleEmphasis: 'prompts that pop.',
     subtitle: 'Toss in a half-baked thought. We’ll spot what is missing, ask a couple of friendly questions, and hand you back a crisp, AI-ready prompt.',
     primaryHeroCta: 'Start polishing',
     noSetup: 'No code. No setup. Just fun.',
     chips: ['No access code needed', 'Editable output', 'Copy-ready', 'English & Japanese'],
+    previewRoughLabel: 'Rough prompt',
+    previewRoughText: 'write a tweet about our launch 🚀',
+    previewPolishedLabel: 'Polished prompt',
+    previewPolishedText: 'Act as a launch copywriter. Create 3 concise posts with audience, tone, CTA, and success criteria...',
+    target: 'target',
+    targetBadge: '80+ target',
     workspaceTitle: 'Prompt workspace',
-    workspaceJp: '作業スペース',
+    workspaceJp: 'Workspace',
     workspaceHelp: 'Type your rough idea below, then hit optimize. We’ve got you.',
     promptLabel: 'Paste your rough prompt here',
     promptPlaceholder: 'e.g. write a tweet about our launch 🚀',
@@ -87,59 +150,71 @@ const labels = {
     charCount: 'characters',
     changedWarning: 'Your draft changed. Optimize again to refresh the result.',
     questionsTitle: 'A couple quick questions',
-    questionsJp: '質問',
+    questionsJp: 'Clarification',
     questionsIntro: 'Answer what you can — blanks are okay. This sharpens the result.',
     answerPlaceholder: 'Your answer...',
     submitAnswers: 'Make my prompt',
     editRough: 'Edit rough prompt instead',
     score: 'Strict prompt score',
     rationale: 'Why',
-    loadingAnalyze: 'Reading your idea and checking for gaps… ちょっと待ってね',
-    loadingOptimize: 'Crafting your shiny new prompt… もうすぐ！',
+    loadingAnalyze: 'Reading your idea and checking for gaps…',
+    loadingOptimize: 'Crafting your shiny new prompt…',
     resultTitle: 'Your polished prompt',
-    resultJp: '完成プロンプト',
+    resultJp: 'Output',
     editable: 'editable',
     english: 'EN',
     japanese: '日本語',
     notes: 'What improved',
     copyEnglish: 'Copy English prompt',
-    copyJapanese: '日本語プロンプトをコピー',
+    copyJapanese: 'Copy Japanese prompt',
     copy: 'Copy',
-    copied: 'Copied',
+    copied: 'Copied!',
+    freeEditHint: 'Free-edit the result, then copy it into your AI tool.',
     emptyResult: 'Your improved prompt will appear here after optimization.',
     examplesTitle: 'Try an example',
-    examplesJp: 'お試し',
+    examplesJp: 'Samples',
     examplesSubtitle: 'Tap a rough prompt and watch it glow up.',
     useExample: 'Polish this',
     logicBadge: 'How the studio works',
-    logicBadgeJp: '仕組み',
+    logicBadgeJp: 'Logic',
     logicTitle: 'Smart logic behind every glow-up.',
-    footerSubtitle: 'Turning rough ideas into prompts that pop. ラフなアイデアを、輝くプロンプトに。'
+    footerSubtitle: 'Turning rough ideas into prompts that pop.'
   },
   ja: {
     switchTo: 'English',
     brand: 'WeLive Prompt Studio',
-    navService: 'service',
-    navServiceJp: 'サービス',
-    navAbout: 'about us',
-    navAboutJp: '会社情報',
-    navMore: 'more',
-    navMoreJp: 'その他',
+    navService: 'サービス',
+    navServiceJp: 'service',
+    navAbout: '会社情報',
+    navAboutJp: 'about us',
+    navMore: 'その他',
+    navMoreJp: 'more',
+    footerService: 'サービス',
+    footerAbout: '会社情報',
+    footerMore: 'その他',
+    footerInquiry: 'お問い合わせ',
     headerCta: '始める',
     heroBadge: 'WeLive Prompt Studio',
-    heroBadgeJp: 'プロンプト道場',
-    title: 'ラフなアイデアを、輝くプロンプトに。',
+    heroBadgeJp: 'AIプロンプト最適化',
+    titleLead: 'ラフなアイデアを',
+    titleEmphasis: '輝くプロンプトに。',
     subtitle: '途中の考えでも大丈夫です。不足している情報だけ確認し、AIに伝わりやすいプロンプトに整えます。',
     primaryHeroCta: '磨き始める',
     noSetup: 'コード不要。すぐ使えます。',
     chips: ['すぐ使える', '出力を編集可能', 'コピー対応', '英語・日本語対応'],
-    workspaceTitle: 'Prompt workspace',
-    workspaceJp: '作業スペース',
+    previewRoughLabel: 'ラフなプロンプト',
+    previewRoughText: '新サービスのローンチについて投稿文を書きたい 🚀',
+    previewPolishedLabel: '整えたプロンプト',
+    previewPolishedText: 'あなたはローンチ専門のコピーライターです。対象者、トーン、CTA、成功基準を含む短い投稿文を3案作成してください...',
+    target: '目標',
+    targetBadge: '80点以上目標',
+    workspaceTitle: '作業スペース',
+    workspaceJp: 'Prompt workspace',
     workspaceHelp: 'ラフなアイデアを入力して、最適化ボタンを押してください。',
     promptLabel: '整えたいプロンプトをここに貼り付けてください',
     promptPlaceholder: '例：新サービスのローンチについて投稿文を書きたい 🚀',
     optimize: '分析して最適化する',
-    optimizeDisplay: 'Optimize!',
+    optimizeDisplay: '最適化する',
     reoptimize: '入力が変更されました — 再分析してください',
     workingRead: '確認中…',
     working: '最適化中...',
@@ -148,34 +223,35 @@ const labels = {
     charCount: '文字',
     changedWarning: '入力内容が変更されました。結果を更新するには、もう一度最適化してください。',
     questionsTitle: '少しだけ確認します',
-    questionsJp: '質問',
+    questionsJp: 'Clarification',
     questionsIntro: '答えられる範囲で大丈夫です。回答があるほど、結果がシャープになります。',
     answerPlaceholder: '回答を入力...',
     submitAnswers: 'プロンプトを作る',
     editRough: '元の入力を編集する',
     score: '厳格なプロンプト評価',
     rationale: '理由',
-    loadingAnalyze: '入力内容と不足情報を確認しています… ちょっと待ってね',
-    loadingOptimize: 'プロンプトを仕上げています… もうすぐ！',
+    loadingAnalyze: '入力内容と不足情報を確認しています…',
+    loadingOptimize: 'プロンプトを仕上げています…',
     resultTitle: '完成プロンプト',
-    resultJp: 'Your polished prompt',
+    resultJp: '出力',
     editable: '編集可能',
-    english: 'EN',
+    english: '英語',
     japanese: '日本語',
     notes: '改善された点',
-    copyEnglish: 'Copy English prompt',
+    copyEnglish: '英語プロンプトをコピー',
     copyJapanese: '日本語プロンプトをコピー',
     copy: 'コピー',
-    copied: 'Copied',
+    copied: 'コピーしました！',
+    freeEditHint: '結果は自由に編集できます。整えたらAIツールにコピーしてください。',
     emptyResult: '最適化後のプロンプトがここに表示されます。',
-    examplesTitle: 'Try an example',
-    examplesJp: 'お試し',
+    examplesTitle: 'サンプルを試す',
+    examplesJp: 'Examples',
     examplesSubtitle: 'サンプルを選ぶと、すぐに試せます。',
     useExample: 'この例を使う',
-    logicBadge: 'How the studio works',
-    logicBadgeJp: '仕組み',
+    logicBadge: 'スタジオの仕組み',
+    logicBadgeJp: 'Logic',
     logicTitle: '良いプロンプトに仕上げるためのロジック。',
-    footerSubtitle: 'ラフなアイデアを、輝くプロンプトに。Turning rough ideas into prompts that pop.'
+    footerSubtitle: 'ラフなアイデアを、輝くプロンプトに。'
   }
 };
 
@@ -213,6 +289,15 @@ export default function Home() {
   const [activeOutputLanguage, setActiveOutputLanguage] = useState('english');
 
   const t = labels[language];
+  const currentExamples = examples.map((example) => ({
+    title: example.title[language],
+    category: example.category[language],
+    emoji: example.emoji,
+    text: example.text[language]
+  }));
+  const currentFlowSteps = flowStepsByLanguage[language];
+  const currentQualityMetrics = qualityMetricsByLanguage[language];
+  const currentQualityCards = qualityCardsByLanguage[language];
   const canSubmit = useMemo(() => prompt.trim().length > 0 && !loading, [prompt, loading]);
   const shouldUseAnswers = clarification?.questions?.length > 0 && !roughPromptChanged;
   const activeOutputText = activeOutputLanguage === 'english' ? result?.optimizedEnglish : result?.optimizedJapanese;
@@ -330,10 +415,10 @@ export default function Home() {
     <main className="app-root wave-bg" id="top">
       <header className="site-header">
         <a className="brand-mark" href="#top" aria-label="WeLive Prompt Studio">
-          <span className="welive-logo" aria-hidden="true"><span>w</span></span>
+          <img className="welive-logo" src="/welive-logo.svg" alt="WeLive" />
           <span className="brand-text">
-            <strong>WeLive</strong>
-            <em>Prompt Studio</em>
+            <strong>Prompt Studio</strong>
+            <em>by WeLive</em>
           </span>
         </a>
 
@@ -356,7 +441,7 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-copy">
           <p className="hero-badge"><span className="sparkle-dot">✦</span>{t.heroBadge}<span>・{t.heroBadgeJp}</span></p>
-          <h1>Turn messy ideas into <span>prompts that pop</span>.</h1>
+          <h1>{t.titleLead} <span>{t.titleEmphasis}</span></h1>
           <p className="hero-subtitle">{t.subtitle}</p>
           <div className="hero-actions">
             <button className="btn-aqua hero-button" onClick={scrollToWorkspace} type="button">🪄 {t.primaryHeroCta}</button>
@@ -370,15 +455,15 @@ export default function Home() {
         <aside className="hero-preview-card" aria-label="Prompt transformation preview">
           <div className="floating-blob blob-one" />
           <div className="preview-mini-card rough-card">
-            <span>Rough prompt</span>
-            <p>write a tweet about our launch 🚀</p>
+            <span>{t.previewRoughLabel}</span>
+            <p>{t.previewRoughText}</p>
           </div>
           <div className="preview-arrow">↓</div>
           <div className="preview-mini-card polished-card">
-            <span>Polished prompt</span>
-            <p>Act as a launch copywriter. Create 3 concise posts with audience, tone, CTA, and success criteria...</p>
+            <span>{t.previewPolishedLabel}</span>
+            <p>{t.previewPolishedText}</p>
           </div>
-          <div className="hero-sticker">80+<small>target</small></div>
+          <div className="hero-sticker">80+<small>{t.target}</small></div>
         </aside>
       </section>
 
@@ -389,7 +474,7 @@ export default function Home() {
               <h2>{t.workspaceTitle} <span>{t.workspaceJp}</span></h2>
               <p>{t.workspaceHelp}</p>
             </div>
-            <span className="quality-pill">80+ target</span>
+            <span className="quality-pill">{t.targetBadge}</span>
           </div>
 
           <label className="prompt-label" htmlFor="rough-prompt">
@@ -442,7 +527,7 @@ export default function Home() {
               <div className="question-stack">
                 {clarification.questions.map((item, index) => (
                   <label className="question-card" key={`${item.category}-${item.question}`}>
-                    <span className="question-category">{item.category}</span>
+                    <span className="question-category">{localizeClarificationCategory(item.category, language)}</span>
                     <strong>{item.question}</strong>
                     <input
                       value={clarificationAnswers[index]?.answer || ''}
@@ -485,7 +570,7 @@ export default function Home() {
               />
 
               <div className="workspace-actions output-actions">
-                <p>Free-edit the result, then copy it into your AI tool.</p>
+                <p>{t.freeEditHint}</p>
                 <button className="btn-sun" type="button" onClick={() => copyPrompt(activeOutputText)}>
                   {status ? `✓ ${t.copied}` : activeOutputLanguage === 'english' ? t.copyEnglish : t.copyJapanese}
                 </button>
@@ -512,10 +597,10 @@ export default function Home() {
         <h2>{t.examplesTitle} <span>{t.examplesJp}</span></h2>
         <p>{t.examplesSubtitle}</p>
         <div className="example-grid">
-          {examples.map((example) => (
+          {currentExamples.map((example) => (
             <button className="example-card" key={example.title} type="button" onClick={() => selectExample(example.text)}>
               <div className="example-top"><span className="example-emoji">{example.emoji}</span><em>{example.category}</em></div>
-              <strong>{example.title} <small>{example.jp}</small></strong>
+              <strong>{example.title}</strong>
               <p>“{example.text}”</p>
               <span className="example-cta">{t.useExample} →</span>
             </button>
@@ -529,19 +614,19 @@ export default function Home() {
           <h2>{t.logicTitle}</h2>
 
           <div className="flow-grid">
-            {flowSteps.map(([number, title, jp, text], index) => (
+            {currentFlowSteps.map(([number, title, jp, text], index) => (
               <article className="flow-card" key={title}>
                 <span>{number}</span>
                 <h3>{title}</h3>
                 <em>{jp}</em>
                 <p>{text}</p>
-                {index < flowSteps.length - 1 && <b aria-hidden="true">→</b>}
+                {index < currentFlowSteps.length - 1 && <b aria-hidden="true">→</b>}
               </article>
             ))}
           </div>
 
           <div className="metric-grid">
-            {qualityMetrics.map(([code, label, title, metric, unit], index) => (
+            {currentQualityMetrics.map(([code, label, title, metric, unit], index) => (
               <article className={`metric-card ${index === 2 ? 'sun' : ''}`} key={code}>
                 <span>{label} ({code})</span>
                 <h3>{title}</h3>
@@ -551,7 +636,7 @@ export default function Home() {
           </div>
 
           <div className="quality-grid">
-            {qualityCards.map(([number, title, text]) => (
+            {currentQualityCards.map(([number, title, text]) => (
               <article className="quality-card" key={title}>
                 <span>{number}</span>
                 <h3>{title}</h3>
@@ -564,14 +649,14 @@ export default function Home() {
 
       <footer className="site-footer" id="footer">
         <div>
-          <strong>WeLive Prompt Studio</strong>
+          <span className="footer-brand"><img src="/welive-logo.svg" alt="WeLive" /><strong>Prompt Studio</strong></span>
           <p>{t.footerSubtitle}</p>
         </div>
         <nav>
-          <a href="https://www.welive-inc.co.jp/">service</a>
-          <a href="#quality-rules">about us</a>
-          <a href="#top">more</a>
-          <a href="#prompt-workspace">inquiry</a>
+          <a href="https://www.welive-inc.co.jp/">{t.footerService}</a>
+          <a href="#quality-rules">{t.footerAbout}</a>
+          <a href="#top">{t.footerMore}</a>
+          <a href="#prompt-workspace">{t.footerInquiry}</a>
         </nav>
       </footer>
     </main>
