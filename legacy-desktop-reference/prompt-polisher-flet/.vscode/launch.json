@@ -1,0 +1,1 @@
+{"version":"0.2.0","configurations":[{"name":"Run Prompt Polisher","type":"python","request":"launch","module":"prompt_polisher.app","envFile":"${workspaceFolder}/.env","justMyCode":true}]}

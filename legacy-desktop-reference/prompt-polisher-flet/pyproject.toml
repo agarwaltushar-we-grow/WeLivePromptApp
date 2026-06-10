@@ -1,0 +1,45 @@
+[project]
+name = "prompt-polisher"
+version = "0.2.0"
+description = "A packaged desktop app that rewrites weak Japanese or English prompts into structured optimized prompts."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet>=0.25.0",
+    "openai>=1.0.0",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0", "ruff>=0.6.0"]
+
+[project.scripts]
+prompt-polisher = "prompt_polisher.app:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.flet]
+product = "Prompt Polisher"
+artifact = "PromptPolisher"
+org = "com.promptpolisher"
+
+[tool.flet.app]
+path = "src"
+module = "main.py"
+exclude = [".env", ".env.example", "exports", "tests", ".vscode"]
+
+[tool.flet.compile]
+app = true
+packages = false
+
+[tool.flet.cleanup]
+app = true
+packages = true
